@@ -4,4 +4,6 @@ To build the ROS1-docker container:
 ```
 
 To start the docker container:
+```bash
 ./run_docker_gafro_ros1.sh 
+```

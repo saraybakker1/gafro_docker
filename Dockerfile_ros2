@@ -1,0 +1,27 @@
+# Use ROS 2 Humble as the base image
+FROM ros:humble
+
+# Set environment variables
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install necessary tools and RViz
+RUN apt-get update && apt-get install -y \
+    ros-humble-rviz2 \
+    ros-humble-desktop \
+    python3-pip \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set up a non-root user (optional, for better security)
+ARG USERNAME=user
+RUN useradd -m $USERNAME && echo "$USERNAME:$USERNAME" | chpasswd && adduser $USERNAME sudo
+USER $USERNAME
+WORKDIR /home/$USERNAME
+
+# Set up catkin workspace
+WORKDIR /GAFRO_WS
+COPY src /GAFRO_WS/src
+
+# Source ROS 2 setup in every new shell
+RUN echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc
+CMD ["bash"]
+
